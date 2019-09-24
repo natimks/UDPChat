@@ -7,13 +7,14 @@ import java.net.SocketException;
 
 
 public class Receiver implements Runnable {
-	private int port = 5555;
+	private int port = 5000;
 	private DatagramSocket datagramSocket;
 	Tela tela;
 
 	public Receiver(Tela tela) {
 		try {
 			datagramSocket = new DatagramSocket(port);
+			datagramSocket.setBroadcast(true);
 			this.tela=tela;
 		} catch (SocketException e) {
 			e.printStackTrace();
