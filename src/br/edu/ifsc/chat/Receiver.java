@@ -5,13 +5,16 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+
 public class Receiver implements Runnable {
 	private int port = 5555;
 	private DatagramSocket datagramSocket;
+	Tela tela;
 
-	public Receiver() {
+	public Receiver(Tela tela) {
 		try {
 			datagramSocket = new DatagramSocket(port);
+			this.tela=tela;
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
@@ -25,9 +28,8 @@ public class Receiver implements Runnable {
 			try {
 				datagramSocket.receive(request);
 				String msg = new String(request.getData());
-				System.out.println("Mensagem recebida: " + msg);
+				tela.setText(msg);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
