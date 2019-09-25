@@ -2,22 +2,28 @@ package br.edu.ifsc.chat;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.net.SocketException;
-
 
 public class Receiver implements Runnable {
 	private int port = 5000;
-	private DatagramSocket datagramSocket;
+	private MulticastSocket datagramSocket;
+	InetAddress inetAddress;
 	Tela tela;
 
-	public Receiver(Tela tela) {
+	public Receiver(Tela tela,int porta) {
 		try {
-			datagramSocket = new DatagramSocket(port);
-			datagramSocket.setBroadcast(true);
-			this.tela=tela;
+			datagramSocket = new MulticastSocket(porta);
+			inetAddress = InetAddress.getByName("225.4.5.6");
+			datagramSocket.joinGroup(inetAddress);
+			this.tela = tela;
+			this.port=porta;
+			
 		} catch (SocketException e) {
-			e.printStackTrace();
+		//	e.printStackTrace();
+		} catch (IOException e) {
+		//	e.printStackTrace();
 		}
 	}
 
@@ -31,10 +37,13 @@ public class Receiver implements Runnable {
 				String msg = new String(request.getData());
 				tela.setText(msg);
 			} catch (IOException e) {
-				e.printStackTrace();
+			//	e.printStackTrace();
 			}
 		}
-
+	}
+	
+	public void closeSocket() {
+		datagramSocket.close();
 	}
 
 }
